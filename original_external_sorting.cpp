@@ -2,6 +2,10 @@
 // merge sort 
 #include <bits/stdc++.h>
 #include <string>
+
+#define MAXNARQS 100
+#define MAXMEM 512 * 1024
+
 using namespace std; 
 
 struct Registro{
@@ -13,7 +17,7 @@ struct Registro{
 struct MinHeapNode 
 { 
 	// The element to be stored 
-	int element; 
+	Registro element; 
 
 	// index of the array from which the element is taken 
 	int i; 
@@ -75,9 +79,9 @@ void MinHeap::MinHeapify(int i)
 	int l = left(i); 
 	int r = right(i); 
 	int smallest = i; 
-	if (l < heap_size && harr[l].element < harr[i].element) 
+	if (l < heap_size && harr[l].element.chave < harr[i].element.chave) 
 		smallest = l; 
-	if (r < heap_size && harr[r].element < harr[smallest].element) 
+	if (r < heap_size && harr[r].element.chave < harr[smallest].element.chave) 
 		smallest = r; 
 	if (smallest != i) 
 	{ 
@@ -99,7 +103,6 @@ void swap(MinHeapNode* x, MinHeapNode* y)
 // Second subarray is arr[m+1..r] 
 void merge(Registro arr[], int l, int m, int r) 
 { 
-	printf("Merge Registro\n");
 	int i, j, k; 
 	int n1 = m - l + 1; 
 	int n2 = r - m; 
@@ -192,7 +195,7 @@ void mergeFiles(char *output_file, int n, int k)
 	{ 
 		// break if no output file is empty and 
 		// index i will be no. of input files 
-		if (fscanf(in[i], "%d ", &harr[i].element) != 1) 
+		if (fread(&harr[i].element, 1, sizeof(Registro), in[i]) == 0 )
 			break; 
 
 		harr[i].i = i; // Index of scratch output file 
@@ -208,14 +211,14 @@ void mergeFiles(char *output_file, int n, int k)
 	{ 
 		// Get the minimum element and store it in output file 
 		MinHeapNode root = hp.getMin(); 
-		fprintf(out, "%d\n ", root.element); 
+		fprintf(out, "%d %s %d\n", root.element.chave, root.element.nome, root.element.idade); 
 
 		// Find the next element that will replace current 
 		// root of heap. The next element belongs to same 
 		// input file as the current min element. 
-		if (fscanf(in[root.i], "%d ", &root.element) != 1 ) 
+		if (fread(&root.element, 1, sizeof(Registro), in[root.i]) == 0 )
 		{ 
-			root.element = INT_MAX; 
+			root.element.chave = INT_MAX; 
 			count++; 
 		} 
 
@@ -273,7 +276,6 @@ void createInitialRuns(char *input_file, int run_size,
 		{
 			if (fread(&arr[i], 1, sizeof(Registro), in) == 0) 
 			{ 
-				printf("If Laço: %d %s %d\n", arr[i].chave, arr[i].nome, arr[i].idade);
 				more_input = false; 
 				break; 
 			}
@@ -317,51 +319,27 @@ void externalSort(char* input_file, char *output_file,
 int main() 
 { 
 	// No. of Partitions of input file. 
-	int num_ways = 10; 
+	int num_ways = MAXNARQS; 
 
 	// The size of each partition 
-	int run_size = 1000; 
+	int run_size = MAXMEM/sizeof(Registro); 
 
 	char input_file[] = "input.txt"; 
-	char output_file[] = "output.txt"; 
+	char output_file[] = "saida.dat"; 
 
 	FILE* in = openFile(input_file, "w"); 
-
-	/*srand(time(NULL)); 
-
-	// generate input 
-	for (int i = 0; i < 10; i++) 
-		fprintf(in, "%d\n ", rand()); 
-
-	fclose(in); */
+	FILE* in2 = openFile("entrada.dat", "r+");
 	
 	srand(time(NULL));
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < run_size; i++) {
 		Registro registro ;
-		registro.chave = rand();
-		strcpy(registro.nome, "Clovis");
-		registro.idade = i;
+		fscanf(in2, "%d %s %d", &registro.chave, registro.nome, &registro.idade);
 		fwrite(&registro, sizeof(Registro), 1, in);
 	}
 	fclose(in);
-	
-	in = openFile(input_file, "r+");
-	for (int i = 0; i < 10; i++) {
-		Registro registro;
-		fread(&registro, 1, sizeof(Registro), in);
-		printf("%d %s %d\n", registro.chave, registro.nome, registro.idade);
-	}
-	fclose(in);
+	fclose(in2);
 	
 	externalSort(input_file, output_file, num_ways, run_size); 
-	
-	in = openFile("0", "r+");
-	for (int i = 0; i < 10; i++) {
-		Registro registro;
-		fread(&registro, 1, sizeof(Registro), in);
-		printf("%d %s %d\n", registro.chave, registro.nome, registro.idade);
-	}
-	fclose(in);
 	
 	return 0; 
 } 
