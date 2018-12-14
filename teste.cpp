@@ -13,14 +13,20 @@ struct Registro{
 	int idade;
 };
 
-void merge(Registro arr[], int esq, int meio, int dir) {
+/*void merge(Registro arr[], int esq, int meio, int dir) {
     int i, j, k; 
 	int n1 = m - l + 1; 
 	int n2 = r - m;
-    Registro* ESQ = (Registro*)malloc(1000 * sizeof(Registro));
-    Registro* DIR = (Registro*)malloc(1000 * sizeof(Registro));
+    
+    Registro* ESQ = (Registro*)malloc(n1 * sizeof(Registro));
+    
+    Registro* DIR = (Registro*)malloc(n2 * sizeof(Registro));
+    
+    
 	
-}
+	
+	
+}*/
 
 void mergeSort(Registro arr[], int esq, int dir) {
     
@@ -60,18 +66,18 @@ void read(Registro arr[], int n_p, FILE* fp){
 
 void externalSort(char* input_file, char *output_file, int num_ways, int run_size) 
 {
-    cout<<"OK\n";
-    
+
     int i = 0;
     int size;
     
-    /*FILE* arquivo_de_saida[num_ways];
-    char fileName[2];
-    for(int i = 0; i < num_ways; ++i){
-        snprintf(fileName, sizeof(fileName), "%d", i);
-        arquivo_de_saida[i] = openFile(fileName, "r");
-    }*/
-    
+    FILE* out[num_ways]; 
+	char fileName[2]; 
+	for (int i = 0; i < num_ways; i++) 
+	{ 
+		snprintf(fileName, sizeof(fileName), "%d", i); 
+		out[i] = openFile(fileName, "w"); 
+	} 
+  
     //Registro reg[MAX_REGISTRO_SIZE];
     Registro* arr = (Registro*)malloc(1000 * sizeof(Registro));
     
@@ -87,7 +93,25 @@ void externalSort(char* input_file, char *output_file, int num_ways, int run_siz
         printf("%d %s %d\n", arr[i].chave, arr[i].nome, arr[i].idade);
     }
     
-    mergeSort(arr, 0, i-1);
+    
+    //##############################################################
+    i = 0; 
+    bool more_input = true; 
+	int next_output_file = 0; 
+	
+	while (more_input) 
+	{ 
+		for (int j = 0; j < size; j++) 
+			fprintf(out[next_output_file], "%d\n ", arr[j].chave); 
+
+    	next_output_file++; 
+	} 
+
+	// close input and output files 
+	for (int i = 0; i < num_ways; i++) 
+		fclose(out[i]); 
+    
+    //###############################################################
     
     fclose(fp);
 }
