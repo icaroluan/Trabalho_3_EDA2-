@@ -13,7 +13,7 @@ int main()
 	FILE* in = fopen(input_file, "w"); 
 	
 	srand(time(NULL));
-	for (int i = 0; i < 5120*1024/32; i++) {
+	for (int i = 0; i < 60; i++) {
 		fprintf(in, "%d %s %d\n", rand(), "Clovis", i);
 	}
 	

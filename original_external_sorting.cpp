@@ -3,8 +3,8 @@
 #include <bits/stdc++.h>
 #include <string>
 
-#define MAXNARQS 100
-#define MAXMEM 512 * 1024
+#define MAXNARQS 10
+#define MAXMEM 320
 
 using namespace std; 
 
@@ -175,7 +175,7 @@ void mergeFiles(char *output_file, int n, int k)
 	FILE* in[k]; 
 	for (int i = 0; i < k; i++) 
 	{ 
-		char fileName[2]; 
+		char fileName[20]; 
 
 		// convert i to string 
 		snprintf(fileName, sizeof(fileName), "%d", i); 
@@ -250,7 +250,7 @@ void createInitialRuns(char *input_file, int run_size,
 
 	// output scratch files 
 	FILE* out[num_ways]; 
-	char fileName[2]; 
+	char fileName[20]; 
 	for (int i = 0; i < num_ways; i++) 
 	{ 
 		// convert i to string 
@@ -329,11 +329,12 @@ int main()
 
 	FILE* in = openFile(input_file, "w"); 
 	FILE* in2 = openFile("entrada.dat", "r+");
+	Registro registro;
 	
 	srand(time(NULL));
-	for (int i = 0; i < run_size; i++) {
-		Registro registro ;
-		fscanf(in2, "%d %s %d", &registro.chave, registro.nome, &registro.idade);
+	
+	while(fscanf(in2, "%d %s %d", &registro.chave, registro.nome, &registro.idade) == 3){
+		
 		fwrite(&registro, sizeof(Registro), 1, in);
 	}
 	fclose(in);
