@@ -304,12 +304,12 @@ void OrdernacaoExterna(char* ArquivoEntrada, char *ArquivoSaida, int NumeroArqui
 } 
 
 
-void removerArquivo(ExcluirArquivosVazios) {
+void removerArquivo(bool ExcluirArquivosVazios, int NumeroArquivos) {
 		remove ("input.txt");
 		if(ExcluirArquivosVazios) {
 			FILE *arquivo; 
 			long tamanho;
-			for (int i = 0; i < num_ways; i++) { 
+			for (int i = 0; i < NumeroArquivos; i++) { 
 				char fileName[20]; 
 				snprintf(fileName, sizeof(fileName), "%d", i); 
 				arquivo = fopen(fileName, "r");
@@ -357,7 +357,7 @@ int main()
 	//ExcluirArquivosVazios CASO SEJA TRUE EXCLUI ARQUIVOS QUE ESTÃO VAZIOS,
 	//E NÃO FORAM NECESSARIOS DURANTE A EXECUÇÃO DO PROGRAMA.
 	bool ExcluirArquivosVazios = true;//MUDAR PARA FALSE CASO QUEIRA SE MANTENHA ARQUIVOS VAZIOS
-	removerArquivo(ExcluirArquivosVazios);
+	removerArquivo(ExcluirArquivosVazios, NumeroArquivos);
 	
 	return 0; 
 } 
