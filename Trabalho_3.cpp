@@ -304,6 +304,25 @@ void OrdernacaoExterna(char* ArquivoEntrada, char *ArquivoSaida, int NumeroArqui
 } 
 
 
+void removerArquivo(ExcluirArquivosVazios) {
+		remove ("input.txt");
+		if(ExcluirArquivosVazios) {
+			FILE *arquivo; 
+			long tamanho;
+			for (int i = 0; i < num_ways; i++) { 
+				char fileName[20]; 
+				snprintf(fileName, sizeof(fileName), "%d", i); 
+				arquivo = fopen(fileName, "r");
+				fseek(arquivo, 0, SEEK_END);
+				tamanho = ftell(arquivo);
+	        	if(tamanho == 0){
+					remove (fileName);
+				}
+			}
+		}
+	}
+
+
 // Driver program to test above 
 int main() 
 { 
@@ -334,6 +353,11 @@ int main()
 	fclose(Entrada2);
 	
 	OrdernacaoExterna(ArquivoEntrada, ArquivoSaida, NumeroArquivos, Memoria); 
+	
+	//ExcluirArquivosVazios CASO SEJA TRUE EXCLUI ARQUIVOS QUE ESTÃO VAZIOS,
+	//E NÃO FORAM NECESSARIOS DURANTE A EXECUÇÃO DO PROGRAMA.
+	bool ExcluirArquivosVazios = true;//MUDAR PARA FALSE CASO QUEIRA SE MANTENHA ARQUIVOS VAZIOS
+	removerArquivo(ExcluirArquivosVazios);
 	
 	return 0; 
 } 
