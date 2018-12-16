@@ -179,7 +179,7 @@ Registro* LerRegistro(Registro* registro, FILE* in){
 
 
 
-  void CriandoRuns(char *ArquivoEntrada,int Memoria,int NumeroArquivos) {
+/*  void CriandoRuns(char *ArquivoEntrada,int Memoria,int NumeroArquivos) {
 	bool ProximoArquivo = true;int IndiceArquivoSaida = 0;int i;
     Registro* MemoriaRuns = (Registro*)malloc(Memoria * sizeof(Registro));
 	 
@@ -214,17 +214,14 @@ for (int i = 0; i < NumeroArquivos; i++) {
 		fclose(ArquivosRuns[i]); }
 	fclose(ArquivoCompleto);} 
 
+*/
 
-
-
-
-
-void OrdernacaoExterna(char* ArquivoEntrada, char *ArquivoSaida, int NumeroArquivos, int Memoria) { 
+/*void OrdernacaoExterna(char* ArquivoEntrada, char *ArquivoSaida, int NumeroArquivos, int Memoria) { 
 	
 	CriandoRuns(ArquivoEntrada, Memoria, NumeroArquivos); 
 	
 	CriandoArquivoFinal(ArquivoSaida, Memoria, NumeroArquivos);} 
-
+*/
 
 
 
@@ -259,7 +256,46 @@ int main() {
 	 while(fscanf(Entrada2, "%d %s %d", &registro.chave, registro.nome, &registro.idade) == 3){
 		fwrite(&registro, sizeof(Registro), 1, Entrada1);}
 	fclose(Entrada1);fclose(Entrada2);
-	 OrdernacaoExterna(ArquivoEntrada, ArquivoSaida, NumeroArquivos, Memoria); 
+	 //OrdernacaoExterna(ArquivoEntrada, ArquivoSaida, NumeroArquivos, Memoria);
+	 
+	 bool ProximoArquivo = true;int IndiceArquivoSaida = 0;int i;
+    Registro* MemoriaRuns = (Registro*)malloc(Memoria * sizeof(Registro));
+	 
+  FILE *ArquivoCompleto = fopen(ArquivoEntrada, "r");
+	 
+  FILE* ArquivosRuns[NumeroArquivos];
+  char IndiceRuns[20]; 
+  for (int i = 0; i < NumeroArquivos; i++) { 
+		 
+	snprintf(IndiceRuns, sizeof(IndiceRuns), "%d", i); 
+		
+	ArquivosRuns[i] = fopen(IndiceRuns, "w");} 
+	 
+  while (ProximoArquivo) { 
+	 
+	for (i = 0; i < Memoria; i++) {
+		if (fread(&MemoriaRuns[i], 1, sizeof(Registro), ArquivoCompleto) == 0) { 
+			ProximoArquivo = false; 
+		break; }} 
+		
+	
+	
+	
+	
+	mergeSort(MemoriaRuns, 0, i - 1); 
+		
+	for (int j = 0; j < i; j++) {  
+		fwrite(&MemoriaRuns[j], sizeof(Registro), 1, ArquivosRuns[IndiceArquivoSaida]);}
+		IndiceArquivoSaida++;} 
+	
+for (int i = 0; i < NumeroArquivos; i++) { 
+		fclose(ArquivosRuns[i]); }
+	fclose(ArquivoCompleto);
+	 
+	 
+	 CriandoArquivoFinal(ArquivoSaida, Memoria, NumeroArquivos);
+	 
+	 
 	//ExcluirArquivosVazios CASO SEJA TRUE EXCLUI ARQUIVOS QUE ESTÃO VAZIOS,
 	//E NÃO FORAM NECESSARIOS DURANTE A EXECUÇÃO DO PROGRAMA.
 	  bool ExcluirArquivosVazios = true;//MUDAR PARA FALSE CASO QUEIRA SE MANTENHA ARQUIVOS VAZIOS
